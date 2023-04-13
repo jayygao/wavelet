@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.URI;
+import java.util.*;
 
 class Handler implements URLHandler {
     // The one bit of state on the server: a number that will be manipulated by
@@ -8,13 +9,16 @@ class Handler implements URLHandler {
 
     public String handleRequest(URI url) {
         if (url.getPath().equals("/")) {
-            return String.format("Words in storage", words.size());
+
+            return "Words in storage: " + words.size();
         } else if (url.getPath().contains("/add")) {
+            System.out.println("Path: " + url.getPath());
             String[] parameters = url.getQuery().split("=");
             if (parameters[0].equals("s")) {
                     words.add(parameters[1]);
                     return "The word " + parameters[1] + " has been added!";
-                }
+            }
+            return "404 Not Found!";
         } else {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/search")) {
@@ -26,7 +30,7 @@ class Handler implements URLHandler {
                             s1 += words.get(i) + " ";
                         }
                     }
-                    return s1;
+                    return String.format(s1);
                 }
             }
             return "404 Not Found!";
